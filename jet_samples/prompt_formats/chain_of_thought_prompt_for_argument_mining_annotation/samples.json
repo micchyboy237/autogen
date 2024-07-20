@@ -1,0 +1,17 @@
+[
+  {
+    "text": "According to a 2014 Congressional Budget Office report, increasing the minimum wage to $9 would lift 300,000 people out of poverty, and an increase to $10.10 would lift 900,000 people out of poverty.",
+    "answer": "Argument_for",
+    "reason": "The premise of the text is that increasing the minimum wage to $9 and $10.10 would significantly reduce the number of people living in poverty by lifting 300,000 and 900,000 people out of poverty, respectively. This text supports the idea of increasing the minimum wage as it presents a positive outcome of such an increase. Therefore, the answer is Argument_for."
+  },
+  {
+    "text": "Increasing the minimum wage reduces the likelihood of upward mobility.",
+    "answer": "Argument_against",
+    "reason": "The premise of the text is that increasing the minimum wage negatively impacts upward mobility. This is an argument against increasing the minimum wage because it suggests a negative consequence (reduced upward mobility) associated with the increase. Therefore, the answer is Argument_against."
+  },
+  {
+    "text": "Mark J. Perry, PhD, of the American Enterprise Institute states that \"the attraction to higher wages from minimum wage legislation reduces high school completion rates for some students with limited skills, who are then disadvantaged with lower wages and career opportunities over the long-run if they never finish high school.\"",
+    "answer": "Argument_against",
+    "reason": "The premise of the text is that higher minimum wages can lead to lower high school completion rates among some students, which ultimately results in lower wages and fewer career opportunities for them in the long term. This is an argument against increasing the minimum wage as it highlights potential long-term disadvantages for certain individuals. Therefore, the answer is Argument_against."
+  }
+]
