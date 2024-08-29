@@ -124,14 +124,20 @@ def salary_calculator(cutoffs):
     # Output the results
     for start, end, salary_gbp, salary_php in results:
         print(f"Cutoff: {start.strftime('%B %d')} - {end.strftime('%d')}")
+        # colorize both total salary as green
         print(
-            f"Total Salary: £{salary_gbp:.2f} / ₱{salary_php:.2f} (Conversion rate: 1 GBP = {conversion_rate:.2f} PHP)\n")
+            f"Total Salary: £\033[92m{salary_gbp:.2f}\033[0m / ₱\033[92m{salary_php:.2f}\033[0m (Conversion rate: 1 GBP = {conversion_rate:.2f} PHP)\n")
 
+    # colorize both total salary as aqua
     print(
-        f"Total Salary for all cutoffs: £{total_salary:.2f} / ₱{total_salary_php:.2f}")
+        f"Total Salary for all cutoffs: £\033[96m{total_salary:.2f}\033[0m / ₱\033[96m{total_salary_php:.2f}\033[0m")
 
 
 # Example usage
 if __name__ == "__main__":
-    cutoffs_count = int(input("Enter the number of salary cutoffs: "))
+    # cutoffs_count = int(input("Enter the number of salary cutoffs: "))
+    # Add a default value for cutoffs_count on input that will be used if no input is given. Should show default value on the prompt.
+    default_value = 2
+    cutoffs_count = int(input(
+        f"Enter the number of salary cutoffs (default: {default_value}): ") or default_value)
     salary_calculator(cutoffs_count)
