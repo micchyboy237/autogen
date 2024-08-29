@@ -31,6 +31,7 @@ from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProx
 
 import os
 import random
+import json
 
 # Print current working directory
 print(f"Current working directory: {os.getcwd()}")
@@ -39,19 +40,7 @@ print(f"Current working directory: {os.getcwd()}")
 seed = 1234
 config_list = autogen.config_list_from_json("OAI_CONFIG_LIST")
 
-print("LLM models: ", [config_list[i]["model"]
-      for i in range(len(config_list))])
-
-# %% [markdown]
-# ````{=mdx}
-# :::tip
-# Learn more about configuring LLMs for agents [here](/docs/topics/llm_configuration).
-# :::
-# ````
-#
-# ## Construct Agents
-
-# %%
+print("Config list:\n", json.dumps(config_list, indent=4))
 
 
 def termination_msg(x):
@@ -79,7 +68,16 @@ boss_aid = RetrieveUserProxyAgent(
     retrieve_config={
         "task": "code",
         "docs_path": "https://raw.githubusercontent.com/microsoft/FLAML/main/website/docs/Examples/Integrate%20-%20Spark.md",
-        "chunk_token_size": 1000,
+        # "docs_path": [
+        #     "https://raw.githubusercontent.com/microsoft/FLAML/main/website/docs/Examples/Integrate%20-%20Spark.md",
+        #     "https://raw.githubusercontent.com/microsoft/FLAML/main/website/docs/Research.md",
+        #     "https://raw.githubusercontent.com/Knuckles-Team/geniusbot/main/README.md",
+        #     "https://raw.githubusercontent.com/Knuckles-Team/repository-manager/main/README.md",
+        #     "https://raw.githubusercontent.com/Knuckles-Team/gitlab-api/main/README.md",
+        #     "https://raw.githubusercontent.com/Knuckles-Team/media-downloader/main/README.md",
+        #     os.path.join(os.path.abspath(""), "..", "website", "docs"),
+        # ],
+        # "chunk_token_size": 1000,
         "model": config_list[0]["model"],
         "collection_name": "groupchat",
         "get_or_create": True,

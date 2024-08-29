@@ -261,7 +261,10 @@ $functions"""
             if WIN32 and lang in ["sh", "shell"]:
                 lang = "ps1"
 
-            if lang not in self.SUPPORTED_LANGUAGES:
+            # Check if the language is a key in execution_policies
+            supported_lang = self.execution_policies.get(lang)
+
+            if supported_lang is None:
                 # In case the language is not supported, we return an error message.
                 exitcode = 1
                 logs_all += "\n" + f"unknown language {lang}"
@@ -287,7 +290,8 @@ $functions"""
                 # Just return a message that the file is saved.
                 logs_all += f"Code saved to {str(written_file)}\n"
                 exitcode = 0
-                continue
+                code_file = str(file_names[0]) if len(file_names) > 0 else None
+                return CommandLineCodeResult(exit_code=exitcode, output=logs_all, code_file=code_file)
 
             program = _cmd(lang)
             cmd = [program, str(written_file.absolute())]

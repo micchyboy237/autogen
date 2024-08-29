@@ -29,6 +29,7 @@
     "@types/react-syntax-highlighter": "^15.5.10",
     "antd": "^5.1.0",
     "autoprefixer": "^10.4.7",
+    "dotenv": "^16.4.5",
     "gatsby": "^4.14.0",
     "gatsby-plugin-image": "^2.14.1",
     "gatsby-plugin-manifest": "^4.14.0",
@@ -67,5 +68,6 @@
     "@types/uuid": "^9.0.8",
     "gh-pages": "^4.0.0",
     "typescript": "^4.6.4"
-  }
+  },
+  "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
 }

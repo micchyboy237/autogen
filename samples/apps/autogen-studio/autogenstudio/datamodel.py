@@ -105,6 +105,7 @@ class ModelTypes(str, Enum):
     openai = "open_ai"
     google = "google"
     azure = "azure"
+    litellm = "litellm"
 
 
 class Model(SQLModel, table=True):

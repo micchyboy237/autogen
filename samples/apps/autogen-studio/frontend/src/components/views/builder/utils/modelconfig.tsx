@@ -36,6 +36,12 @@ const ModelTypeSelector = ({
       description: "Gemini",
       icon: <CpuChipIcon className="h-6 w-6 text-primary" />,
     },
+    {
+      label: "Local LiteLLM",
+      value: "litellm",
+      description: "Local LiteLLM",
+      icon: <CpuChipIcon className="h-6 w-6 text-primary" />,
+    },
   ];
 
   const [selectedType, setSelectedType] = React.useState<string | undefined>(

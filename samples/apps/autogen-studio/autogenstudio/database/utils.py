@@ -159,7 +159,14 @@ def init_db_samples(dbmanager: Any):
         user_id="guestuser@gmail.com",
         api_type="open_ai",
     )
-
+    litellm_model = Model(
+        model="NotRequired",
+        description="Local LiteLLM models (ex. ollama models)" ,
+        user_id="guestuser@gmail.com",
+        api_type="litellm",
+        api_key="NotRequired",
+        base_url="http://0.0.0.0:4000",
+    )
     google_gemini_model = Model(
         model="gemini-1.5-pro-latest",
         description="Google's Gemini model",
@@ -176,6 +183,22 @@ def init_db_samples(dbmanager: Any):
         user_id="guestuser@gmail.com",
     )
 
+    import random
+    # cache_seed = random.randint(0, 1000)
+    cache_seed = 42
+    llm_config = {
+        # "timeout": 600,
+        "cache_seed": cache_seed,  # change the seed for different trials
+        "config_list": [
+            {
+                "model": "NotRequired",
+                "api_key": "NotRequired",
+                "base_url": "http://0.0.0.0:4000",
+                "stream": True
+            }
+        ],
+        "temperature": 0.8,
+    }
     # agents
     user_proxy_config = AgentConfig(
         name="user_proxy",
@@ -198,7 +221,7 @@ def init_db_samples(dbmanager: Any):
         max_consecutive_auto_reply=25,
         system_message=AssistantAgent.DEFAULT_SYSTEM_MESSAGE,
         code_execution_config=CodeExecutionConfigTypes.none,
-        llm_config={},
+        llm_config=llm_config,
     )
     painter_assistant = Agent(
         user_id="guestuser@gmail.com", type=AgentType.assistant, config=painter_assistant_config.model_dump(mode="json")
@@ -211,7 +234,7 @@ def init_db_samples(dbmanager: Any):
         max_consecutive_auto_reply=25,
         system_message="You are a helpful assistant that can suggest a travel plan for a user. You are the primary cordinator who will receive suggestions or advice from other agents (local_assistant, language_assistant). You must ensure that the finally plan integrates the suggestions from other agents or team members. YOUR FINAL RESPONSE MUST BE THE COMPLETE PLAN. When the plan is complete and all perspectives are integrated, you can respond with TERMINATE.",
         code_execution_config=CodeExecutionConfigTypes.none,
-        llm_config={},
+        llm_config=llm_config,
     )
     planner_assistant = Agent(
         user_id="guestuser@gmail.com", type=AgentType.assistant, config=planner_assistant_config.model_dump(mode="json")
@@ -224,7 +247,7 @@ def init_db_samples(dbmanager: Any):
         max_consecutive_auto_reply=25,
         system_message="You are a local assistant that can suggest local activities or places to visit for a user. You can suggest local activities, places to visit, restaurants to eat at, etc. You can also provide information about the weather, local events, etc. You can provide information about the local area, but you cannot suggest a complete travel plan. You can only provide information about the local area.",
         code_execution_config=CodeExecutionConfigTypes.none,
-        llm_config={},
+        llm_config=llm_config,
     )
     local_assistant = Agent(
         user_id="guestuser@gmail.com", type=AgentType.assistant, config=local_assistant_config.model_dump(mode="json")
@@ -237,7 +260,7 @@ def init_db_samples(dbmanager: Any):
         max_consecutive_auto_reply=25,
         system_message="You are a helpful assistant that can review travel plans, providing feedback on important/critical tips about how best to address language or communication challenges for the given destination. If the plan already includes language tips, you can mention that the plan is satisfactory, with rationale.",
         code_execution_config=CodeExecutionConfigTypes.none,
-        llm_config={},
+        llm_config=llm_config,
     )
     language_assistant = Agent(
         user_id="guestuser@gmail.com",
@@ -255,7 +278,7 @@ def init_db_samples(dbmanager: Any):
         system_message="You are a group chat manager",
         code_execution_config=CodeExecutionConfigTypes.none,
         default_auto_reply="TERMINATE",
-        llm_config={},
+        llm_config=llm_config,
         speaker_selection_method="auto",
     )
     travel_groupchat_agent = Agent(
@@ -273,6 +296,7 @@ def init_db_samples(dbmanager: Any):
         session.add(zephyr_model)
         session.add(google_gemini_model)
         session.add(azure_model)
+        session.add(litellm_model)
         session.add(gpt_4_model)
         session.add(generate_image_skill)
         session.add(user_proxy)

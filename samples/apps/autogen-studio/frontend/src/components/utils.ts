@@ -68,6 +68,7 @@ export function fetchJSON(
   onError: (error: IStatus) => void,
   onFinal: () => void = () => {}
 ) {
+  console.log("fetchJSON", url, payload);
   return fetch(url, payload)
     .then(function (response) {
       if (response.status !== 200) {
@@ -86,6 +87,11 @@ export function fetchJSON(
         return;
       }
       return response.json().then(function (data) {
+        console.log("Fetch Success", {
+          url,
+          payload,
+          data,
+        });
         onSuccess(data);
       });
     })
@@ -266,6 +272,14 @@ export const sampleModelConfig = (modelType: string = "open_ai") => {
     description: "Google Gemini Model model",
   };
 
+  const litellmConfig: IModelConfig = {
+    model: "NotRequired",
+    api_key: "NotRequired",
+    api_type: "litellm",
+    base_url: "http://0.0.0.0:4000",
+    description: "Local LiteLLM models (ex. ollama models)" 
+  };
+
   switch (modelType) {
     case "open_ai":
       return openaiConfig;
@@ -273,8 +287,10 @@ export const sampleModelConfig = (modelType: string = "open_ai") => {
       return azureConfig;
     case "google":
       return googleConfig;
+    case "litellm":
+      return litellmConfig;
     default:
-      return openaiConfig;
+      return litellmConfig;
   }
 };
 

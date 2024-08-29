@@ -1,11 +1,19 @@
 [
+  // For LiteLLM API after running this server command:
+  // litellm --model ollama_chat/llama3
   {
-    "model": "llama3",
-    "api_key": "ollama",
-    "api_base": "http://0.0.0.0:4279",
-    "tags": [
-      "llama3",
-      "ollama"
-    ]
-  }
+    "model": "NotRequired",
+    "api_key": "NotRequired",
+    "base_url": "http://0.0.0.0:4000",
+    "stream": true
+  },
+  // {
+  //   "model": "llama3",
+  //   "api_key": "ollama",
+  //   "api_base": "http://localhost:11434",
+  //   "tags": [
+  //     "llama3",
+  //     "ollama"
+  //   ]
+  // }
 ]

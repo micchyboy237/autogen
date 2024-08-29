@@ -10,10 +10,7 @@
       "max_consecutive_auto_reply": 5,
       "system_message": "",
       "llm_config": false,
-      "code_execution_config": {
-        "work_dir": null,
-        "use_docker": false
-      }
+      "code_execution_config": "none"
     }
   },
   "receiver": {
@@ -21,10 +18,14 @@
     "description": "A group chat workflow",
     "config": {
       "name": "group_chat_manager",
+      "code_execution_config": "none",
       "llm_config": {
         "config_list": [
           {
-            "model": "gpt-4-1106-preview"
+            "model": "NotRequired",
+            "api_key": "NotRequired",
+            "base_url": "http://0.0.0.0:4000",
+            "stream": true
           }
         ],
         "temperature": 0.1,
@@ -44,10 +45,14 @@
           "type": "assistant",
           "config": {
             "name": "primary_assistant",
+            "code_execution_config": "none",
             "llm_config": {
               "config_list": [
                 {
-                  "model": "gpt-4-1106-preview"
+                  "model": "NotRequired",
+                  "api_key": "NotRequired",
+                  "base_url": "http://0.0.0.0:4000",
+                  "stream": true
                 }
               ],
               "temperature": 0.1,
@@ -63,10 +68,14 @@
           "type": "assistant",
           "config": {
             "name": "local_assistant",
+            "code_execution_config": "none",
             "llm_config": {
               "config_list": [
                 {
-                  "model": "gpt-4-1106-preview"
+                  "model": "NotRequired",
+                  "api_key": "NotRequired",
+                  "base_url": "http://0.0.0.0:4000",
+                  "stream": true
                 }
               ],
               "temperature": 0.1,
@@ -82,10 +91,14 @@
           "type": "assistant",
           "config": {
             "name": "language_assistant",
+            "code_execution_config": "none",
             "llm_config": {
               "config_list": [
                 {
-                  "model": "gpt-4-1106-preview"
+                  "model": "NotRequired",
+                  "api_key": "NotRequired",
+                  "base_url": "http://0.0.0.0:4000",
+                  "stream": true
                 }
               ],
               "temperature": 0.1,

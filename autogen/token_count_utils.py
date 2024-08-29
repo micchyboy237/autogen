@@ -89,48 +89,66 @@ def _num_token_from_text(text: str, model: str = "gpt-3.5-turbo-0613"):
 def _num_token_from_messages(messages: Union[List, Dict], model="gpt-3.5-turbo-0613"):
     """Return the number of tokens used by a list of messages.
 
-    retrieved from https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb/
+    Retrieved from https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb/
     """
     if isinstance(messages, dict):
         messages = [messages]
 
     try:
-        encoding = tiktoken.encoding_for_model(model)
-    except KeyError:
-        logger.warning(f"Model {model} not found. Using cl100k_base encoding.")
-        encoding = tiktoken.get_encoding("cl100k_base")
-    if model in {
-        "gpt-3.5-turbo-0613",
-        "gpt-3.5-turbo-16k-0613",
-        "gpt-4-0314",
-        "gpt-4-32k-0314",
-        "gpt-4-0613",
-        "gpt-4-32k-0613",
-    }:
+        try:
+            encoding = tiktoken.encoding_for_model(model)
+        except KeyError:
+            logger.warning(f"Model {model} not found. Using cl100k_base encoding.")
+            encoding = tiktoken.get_encoding("cl100k_base")
+
+        # Initialize default values
         tokens_per_message = 3
         tokens_per_name = 1
-    elif model == "gpt-3.5-turbo-0301":
-        tokens_per_message = 4  # every message follows <|start|>{role/name}\n{content}<|end|>\n
-        tokens_per_name = -1  # if there's a name, the role is omitted
-    elif "gpt-3.5-turbo" in model:
-        logger.info("gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
-        return _num_token_from_messages(messages, model="gpt-3.5-turbo-0613")
-    elif "gpt-4" in model:
-        logger.info("gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
-        return _num_token_from_messages(messages, model="gpt-4-0613")
-    elif "gemini" in model:
-        logger.info("Gemini is not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
-        return _num_token_from_messages(messages, model="gpt-4-0613")
-    elif "claude" in model:
-        logger.info("Claude is not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
-        return _num_token_from_messages(messages, model="gpt-4-0613")
-    elif "mistral-" in model or "mixtral-" in model:
-        logger.info("Mistral.AI models are not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
-        return _num_token_from_messages(messages, model="gpt-4-0613")
-    else:
-        raise NotImplementedError(
-            f"""_num_token_from_messages() is not implemented for model {model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens."""
-        )
+    
+    
+        if model in {
+            "gpt-3.5-turbo-0613",
+            "gpt-3.5-turbo-16k-0613",
+            "gpt-4-0314",
+            "gpt-4-32k-0314",
+            "gpt-4-0613",
+            "gpt-4-32k-0613",
+        }:
+            tokens_per_message = 3
+            tokens_per_name = 1
+        elif model == "gpt-3.5-turbo-0301":
+            tokens_per_message = 4  # every message follows {role/name}\n{content}\n
+            tokens_per_name = -1  # if there's a name, the role is omitted
+        elif "gpt-3.5-turbo" in model:
+            logger.info("gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
+            return _num_token_from_messages(messages, model="gpt-3.5-turbo-0613")
+        elif "gpt-4" in model:
+            logger.info("gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
+            return _num_token_from_messages(messages, model="gpt-4-0613")
+        elif "gemini" in model:
+            logger.info("Gemini is not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
+            return _num_token_from_messages(messages, model="gpt-4-0613")
+        elif "claude" in model:
+            logger.info("Claude is not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
+            return _num_token_from_messages(messages, model="gpt-4-0613")
+        elif "mistral-" in model or "mixtral-" in model:
+            logger.info("Mistral.AI models are not supported in tiktoken. Returning num tokens assuming gpt-4-0613.")
+            return _num_token_from_messages(messages, model="gpt-4-0613")
+        else:
+            tokens_per_message = 3
+
+    except Exception as e:
+        logger.error(f"Error while setting tokens_per_message and tokens_per_name: {e}")
+        tokens_per_message = 3
+        tokens_per_name = 1
+
+    if "tokens_per_name" not in locals():
+        tokens_per_name = 1
+    # Debug information
+    print(f"Model: {model}")
+    print(f"Tokens per message: {tokens_per_message}")
+    print(f"Tokens per name: {tokens_per_name}")
+
     num_tokens = 0
     for message in messages:
         num_tokens += tokens_per_message
@@ -138,20 +156,23 @@ def _num_token_from_messages(messages: Union[List, Dict], model="gpt-3.5-turbo-0
             if value is None:
                 continue
 
-            # function calls
+            # Function calls
             if not isinstance(value, str):
                 try:
                     value = json.dumps(value)
                 except TypeError:
                     logger.warning(
-                        f"Value {value} is not a string and cannot be converted to json. It is a type: {type(value)} Skipping."
+                        f"Value {value} is not a string and cannot be converted to json. It is a type: {type(value)}. Skipping."
                     )
                     continue
 
             num_tokens += len(encoding.encode(value))
             if key == "name":
+                if "tokens_per_name" not in locals():
+                    tokens_per_name = 1
                 num_tokens += tokens_per_name
-    num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
+
+    num_tokens += 3  # every reply is primed with assistant
     return num_tokens
 
 
